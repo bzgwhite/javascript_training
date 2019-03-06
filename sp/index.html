@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<meta name="description" content="Handsontableのデモでーす。">
+		<title>Handsontable - jQuery Plugin Demo</title>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/jquery.handsontable.full.js"></script>
+		<link rel="stylesheet" media="screen" href="css/jquery.handsontable.full.css">
+	</head>
+	<body>
+		<h1>Handsontableのデモでーす。</h1>
+		<div id="example1"></div>
+		<script>
+			fileds = ['rows','name','num','label','price','total','memo'];
+			$("#example1").handsontable({
+				startRows: 10,
+				startCols: 10,
+				rowHeaders: true,
+				colHeaders: ["番号", "商品名", "数量","単位","単価","合計","備考"],
+				minSpareRows: 1,
+				// 最低12行は表示します
+				minRows: 12,
+				// 最低7列は表示します
+				minCols: 7,
+				fillHandle: true, //possible values: true, false, "horizontal", "vertical"
+				onChange: function(change, source) {
+					if(source === 'loadData') return;
+					// change[0]の中に、変更した行数、列数、変更前の値、変更後の値が
+					// 配列で入っていますので、それを使って、変更された場所、値を呼び出します
+					onField = fileds[change[0][1]];		// 変更フィールド名の取得
+					onRow = change[0][0]+1;			// 変更行数の取得
+					onData = change[0][3];				// 変更後のデータ取得
+					$("#"+onField+onRow).val(onData);	// 値をセット
+					onNum = $("#num"+onRow).val();		// 変更行の数量取得
+					onPrice = $("#price"+onRow).val();	// 変更行の単価取得
+					if(onNum*onPrice > 0){
+						data[onRow-1][5] = onNum*onPrice;
+					}else{
+						data[onRow-1][5] = "";
+					}
+					$("#example1").handsontable('render');
+				}
+
+			});
+			var data = [
+				[1.1, "buzz", 1996, 474],
+				[1.2, "rex", 1996, 848],
+				[1.3, "bo", 1997, 974],
+				[2.0, "hamm", 1998, 1500],
+				[2.1, "slink", 1999, 2250],
+				[2.2, "potato", 2000, 3900],
+				[3.0, "woody", 2002, 8500],
+				[3.1, "sarge", 2005, 15400],
+				[4.0, "etch", 2007, 18000],
+				[5.0, "lenny", 2009, 28000],
+				[6.0, "squeeze", 2011, 29000],
+				[7.0, "wheezy", "2013予定", ""]
+			];
+	 
+			$("#example1").handsontable("loadData", data);
+		</script>
+		<input type="hidden" name="rows[1]" id="rows1" value="1">
+		<input type="hidden" name="num[1]" id="num1" value="1996">
+		<input type="hidden" name="name[1]" id="price1" value="">
+		<input type="hidden" name="rows[2]" id="rows2" value="2">
+		<input type="hidden" name="num[2]" id="num2" value="1997">
+		<input type="hidden" name="name[2]" id="price2" value="">
+	</body>
+</html>
