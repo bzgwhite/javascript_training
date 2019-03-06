@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+	<script>
+		var playerA;
+		var playerB;
+
+		window.onload = function(){
+
+			document.getElementById("battleStart").onclick = function(){
+				playerA = document.querySelector('body > div.setting > input[type="text"]:nth-child(1)').value;
+				playerB = document.querySelector('body > div.setting > input[type="text"]:nth-child(2)').value;
+				playerA	= new chartactor(playerA);
+				playerB	= new chartactor(playerB);
+				var fieldA = document.getElementById("fieldA");
+				var fieldB = document.getElementById("fieldB");
+				var player = document.createElement("span");
+				var player2 = document.createElement("span");
+				player.innerHTML = playerA.name;
+				fieldA.appendChild(player);
+				player2.innerHTML = playerB.name;
+				fieldB.appendChild(player2);
+				document.querySelector('body > div.battle_field > input[type="hidden"]:nth-child(1)').value = playerA.name;
+				document.querySelector('body > div.battle_field > input[type="hidden"]:nth-child(2)').value = playerB.name;
+
+			}
+		}
+
+		var chartactor = function(name){
+			this.name = name;
+			this.hp = 100;
+			this.atack = 30;
+			this.block = 20;
+
+			this.doping = function(){
+				var random = Math.floor( Math.random() * 11 );
+				if(random<3){
+					this.atack += 20;
+					console.log(this.name+"の攻撃力が20上がった。");
+				}else{
+					console.log("残念。何もなかった。");
+				}
+			}
+
+			this.appear = function(){
+
+			}
+
+			this.kougeki = function(target){
+				console.log(target.name+"は"+(this.atack-target.block)+"のダメージを受けた。");
+				target.hp -= (this.atack-target.block);
+				target.deadcheck(target);
+			}
+			this.deadcheck = function(target){
+				try{
+					if(target.hp <= 0){
+						console.log(target.name+"は倒れた。");
+						throw new Error("ゲーム終了");
+					}
+					console.log(target.name+"の残りダメージ"+target.hp);
+				}catch(e){
+					console.log(e.message);
+				}
+			}
+		}
+
+	</script>
+	<style>
+		#fieldA,#fieldB{
+			display: inline-block;
+			width: 300px;
+			height: 300px;
+			background: gray;
+			text-align: center;
+			vertical-align: middle;
+		}
+		#areaA,#areaB{
+			display: inline-block;
+			width: 300px;
+			height: 100px;
+		}
+
+	</style>
+</head>
+<body>
+	<div class="setting">
+		<input type="text" name="playerA">
+		<input type="text" name="playerB">
+		<span id="battleStart">開始!</span>
+	</div>
+	<div class="battle_field">
+		<input type="hidden" name="A">
+		<input type="hidden" name="B">
+		<div id="fieldA">
+		</div>
+		<div id="fieldB">
+		</div>
+		<div id="areaA">
+			<button onclick="playerA.kougeki(playerB);">攻撃</button>
+			<button onclick="playerA.doping();">ドーピング</button>
+		</div>
+		<div id="areaB">
+			<button onclick="playerB.kougeki(playerA);">攻撃</button>
+			<button onclick="playerB.doping();">ドーピング</button>
+		</div>
+	</div>
+</body>
+</html>
